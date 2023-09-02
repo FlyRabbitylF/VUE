@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+      <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+  <div id="commentGenerate" style="width: 80%;text-align: center;">
+    <el-container>
+      <el-aside  style="display: flex">
+        <el-menu
+        style="text-align: left;"
+        default-active="1"
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose">
+        <el-menu-item index="1">
+          <i class="el-icon-notebook-2"></i>
+          <a href="Code.html" target="_parent" style="text-decoration:none"><span slot="title">文本代码</span></a>
+        </el-menu-item>
+        <el-menu-item index="2">
+          <i class="el-icon-menu"></i>
+          <a href="Enum.html" target="_parent" style="text-decoration:none"><span slot="title">枚举</span></a>
+        </el-menu-item>
+        <el-menu-item index="3">
+          <i class="el-icon-document"></i>
+          <a href="Function.html" target="_parent" style="text-decoration:none"><span slot="title">函数</span></a>
+        </el-menu-item>
+        <el-menu-item index="4">
+          <i class="el-icon-setting"></i>
+          <a href="Define.html" target="_parent" style="text-decoration:none"><span slot="title">宏</span></a>
+        </el-menu-item>
+      </el-menu>
+      </el-aside>
+      <el-container>
+        <el-main>
+        <el-form ref="form" :model="form" label-width="80px">
+          <!-- <el-form-item label="CIC">
+            <el-input v-model="form.CIC" clearable></el-input>
+          </el-form-item> -->
+
+            <el-form-item label="Project">
+            <el-input v-model="form.project" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item label="File">
+            <el-input v-model="form.file" clearable></el-input>
+          </el-form-item>
+
+
+            <el-form-item label="Comment">
+            <el-input v-model="form.comment" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item label="Component">
+            <el-input v-model="form.component" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item label="Description">
+            <el-input v-model="form.componentDescription" clearable type="textarea"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Module">
+            <el-input v-model="form.module" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item label="Description">
+            <el-input v-model="form.moduleDescription" clearable type="textarea"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Author">
+            <el-input v-model="form.author" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item label="Language">
+            <el-input v-model="form.language" clearable></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="danger" @click="resetForm()">清空</el-button>
+            <el-button type="success" @click="dialogVisible = true">弹出代码</el-button>
+            <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">查看代码</el-button>
+          </el-form-item>
+        </el-form>
+
+        </el-main>
+      </el-container>
+    </el-container>
+
+
+    <el-dialog
+    title="提示"
+    :visible.sync="dialogVisible"
+    width="30%"
+    >
+    <el-card class="box-card" style="text-align: left;">
+        <div class="text item" >
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*COMPANY : VALEO CDA / CIC : {{form.CIC}}  */              <br>
+            /*PROJECT : {{form.project}}*/                              <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*FILE : {{form.file}}        */                                    <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*Component : {{form.component}}*/                          <br>
+            /*Description : {{form.componentDescription}}*/             <br>
+            /*Module : {{form.module}}*/                                <br>
+            /*Description : {{form.moduleDescription}}*/                <br>
+            /*Author : {{form.author}}          Date : {{date}}*/        <br>
+            /*Coding Language : {{form.language}}*/                     <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*COPYRIGHT {{year}} VALEO CDA*/                            <br>
+            /*All rights reserved*/                                     <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*EVOLUTIONS(automatic update PVCS)*/                       <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*INCLDUE FILE*/                                            <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*CONSTANTS,MACROS*/                                        <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*TYPES*/                                                   <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*PULIC VARIABLES*/                                         <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*PULIC FUNCTION*/                                          <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*PRIVATE VARIABLES*/                                       <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+    
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+            /*PRIVATE FUNCTION*/                                        <br>
+            /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+          </div>
+  </el-card>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </span>
+    </el-dialog>
+
+    <!-- <el-card class="box-card" style="text-align: left;white-space: pre-wrap;white-space: pre;">
+      <div class="text item" >
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*COMPANY : VALEO CDA / CIC : {{form.CIC}}  */              <br>
+        /*PROJECT : {{form.project}}*/                              <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*FILE : {{form.file}}        */                                    <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*Component : {{form.component}}*/                          <br>
+        /*Description :                                             <br>
+        /*  {{form.componentDescription}}*/                         <br>
+        /*Module : {{form.module}}*/                                <br>
+        /*Description : {{form.moduleDescription}}*/                <br>
+        /*Author : {{form.author}}          Date : {{date}}*/        <br>
+        /*Coding Language : {{form.language}}*/                     <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*COPYRIGHT {{year}} VALEO CDA*/                            <br>
+        /*All rights reserved*/                                     <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*EVOLUTIONS(automatic update PVCS)*/                       <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*INCLDUE FILE*/                                            <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*CONSTANTS,MACROS*/                                        <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*TYPES*/                                                   <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PULIC VARIABLES*/                                         <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PULIC FUNCTION*/                                          <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PRIVATE VARIABLES*/                                       <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PRIVATE FUNCTION*/                                        <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+      </div>
+    </el-card> -->
+
+    <el-drawer
+    :size="600"
+    title="生成代码"
+    :visible.sync="drawer"
+    :direction="direction">
+    <div class="text item" style="text-align: left;">
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*COMPANY : VALEO CDA / CIC : {{form.CIC}}  */              <br>
+        /*PROJECT : {{form.project}}*/                              <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*FILE : {{form.file}}        */                                    <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*Component : {{form.component}}*/                          <br>
+        /*Description : {{form.componentDescription}}*/             <br>
+        /*Module : {{form.module}}*/                                <br>
+        /*Description : {{form.moduleDescription}}*/                <br>
+        /*Author : {{form.author}}          Date : {{date}}*/        <br>
+        /*Coding Language : {{form.language}}*/                     <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*COPYRIGHT {{year}} VALEO CDA*/                            <br>
+        /*All rights reserved*/                                     <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*EVOLUTIONS(automatic update PVCS)*/                       <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*INCLDUE FILE*/                                            <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*CONSTANTS,MACROS*/                                        <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*TYPES*/                                                   <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PULIC VARIABLES*/                                         <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PULIC FUNCTION*/                                          <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PRIVATE VARIABLES*/                                       <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br>
+        /*PRIVATE FUNCTION*/                                        <br>
+        /****** ***** ***** ***** ****** ***** ***** ***** *****/   <br><br>
+      </div>
+    </el-drawer>
+
+  </div>
+</body>
+  <script>
+    new Vue({
+      el: '#commentGenerate',
+      data:{
+        form:{},
+        code:'',
+        date:new Date().toLocaleString(),
+        year:new Date().getFullYear(),
+        dialogVisible:false,
+        drawer: false,
+        direction: 'rtl',
+      },
+      methods: {
+        resetForm(){
+             this.form={}
+        }
+      },
+
+    })
+  </script>
+</html>
