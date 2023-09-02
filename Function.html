@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+
+</head>
+<body>
+  <div id="codeGenerate" style="text-align: center;width: 80%;">
+   <template>
+
+    <el-container >
+        <el-aside  style="display: flex" width="200px"> 
+          <el-menu
+          style="text-align: left;"
+          default-active="3"
+          class="el-menu-vertical-demo"
+          @open="handleOpen"
+          @close="handleClose">
+          <el-menu-item index="1">
+            <i class="el-icon-notebook-2"></i>
+            <a href="Code.html" target="_parent" style="text-decoration:none"><span slot="title">文本代码</span></a>
+          </el-menu-item>
+          <el-menu-item index="2">
+            <i class="el-icon-menu"></i>
+            <a href="Enum.html" target="_parent" style="text-decoration:none"><span slot="title">枚举</span></a>
+          </el-menu-item>
+          <el-menu-item index="3">
+            <i class="el-icon-document"></i>
+            <a href="Function.html" target="_parent" style="text-decoration:none"><span slot="title">函数</span></a>
+          </el-menu-item>
+          <el-menu-item index="4">
+            <i class="el-icon-setting"></i>
+            <a href="Define.html" target="_parent" style="text-decoration:none"><span slot="title">宏</span></a>
+          </el-menu-item>
+        </el-menu>
+        </el-aside>
+        <el-container >
+          <el-main >
+            <el-form ref="form" :model="form" label-width="80px">
+
+                <el-form-item label="模块名" >
+                    <el-input v-model="moduleName" clearable></el-input>
+                </el-form-item>
+
+                <el-form-item label="函数名" >
+                    <el-input v-model="functionName" clearable></el-input>
+                </el-form-item>
+
+                <el-form-item label="函数作用" >
+                <el-input v-model="functionDescription" clearable type="textarea"></el-input>
+                </el-form-item>
+
+                <el-form-item label="类型" style="text-align: left;">
+                    <el-radio-group v-model="type">
+                    <el-radio label="PRIVATE"></el-radio>
+                    <el-radio label="PUBLIC"></el-radio>
+                    </el-radio-group>
+
+                        <el-select
+                        style="margin-left: 80px;"
+                        v-model="returnType"
+                        filterable
+                        allow-create
+                        default-first-option
+                        placeholder="返回类型">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="注释" >
+                    <el-input v-model="returnComment" clearable type="textarea"></el-input>
+                </el-form-item>
+
+                <el-form-item label="范围" >
+                    <el-input v-model="range" clearable></el-input>
+                </el-form-item>
+
+                <el-divider></el-divider>
+                <el-form-item label="类型">
+                    <el-input v-model="form.typeName" clearable></el-input>
+                </el-form-item>
+
+                <el-form-item label="变量名" >
+                <el-input v-model="form.name" clearable></el-input>
+                </el-form-item>
+
+                <el-form-item label="注释">
+                <el-input v-model="form.comment" clearable></el-input>
+                </el-form-item>
+            </el-form>
+            <div style="margin-top: 20px">
+                <el-button @click="add()" type="primary">添加</el-button>
+                <el-button  @click="generateCode()" type="success">生成</el-button>
+                <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">选择数据</el-button>
+            </div>
+
+          </el-main>
+        </el-container>
+      </el-container>
+
+
+
+    <el-drawer :size="700" title="数据" :visible.sync="drawer" :direction="direction">
+        <el-table max-height="290"ref="multipleTable":data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column label="类型" width="120">
+                <template slot-scope="scope">{{ scope.row.typeName }}</template>
+            </el-table-column>
+            <el-table-column prop="name" label="变量名" width="120"></el-table-column>
+            <el-table-column prop="comment" label="注释" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="right" label="操作" width="120">
+                <template slot-scope="scope">
+                    <el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">移除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+      </el-drawer>
+
+        <!-- <div style="margin-top: 20px">
+            <el-button @click="add()" type="primary">添加</el-button>
+            <el-button  @click="generateCode()" type="success">生成</el-button>
+            <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">选择数据</el-button>
+        </div> -->
+
+        <!-- <el-dialog title="提示" :visible.sync="dialogVisible" width="70%">
+        <div class="text item" style="text-align: left;">
+           
+        
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog> -->
+
+
+      <el-dialog title="提示" :visible.sync="dialogVisible" width="70%">
+        <div class="text item" style="text-align: left;">
+            {{'/* Description: '+functionDescription + '*/'}}<br>
+            /*RETURN*/<br>
+            {{'/* Comment: '+returnComment + '*/'}}<br>
+            {{'/* range: '+range + '*/'}}<br>
+            {{'/* Comment: '+functionDescription + '*/'}}<br>
+            {{ strFunction }}<br>
+            (<br>
+                <div v-for="(data,index) in multipleSelection" :key="data" class="text item" style="text-align: left;">
+                    <div class="text item" style="text-align: left;" v-if="index===multipleSelection.length-1">
+                        <!-- {{'  /*Comment :' + data.comment +'*/'}}
+                        {{'  '+data.name+'='+data.constant}} -->
+                        &nbsp;&nbsp;{{data.typeName + ' '+ data.name + '  /*Comment :' + data.comment +'*/'}}
+                    </div>
+
+                    <div class="text item" style="text-align: left;" v-else>
+                        <!-- {{'  /*Comment :' + data.comment +'*/'}}
+                        {{'  '+data.name+'='+data.constant+','}} -->
+                        &nbsp;&nbsp;{{data.typeName + ' '+ data.name + ',  /*Comment :' + data.comment +'*/'}}
+                    </div>
+                </div>
+            )<br>
+            {<br>
+                &nbsp;&nbsp;/*Write Code Hear*/<br><br>
+            }<br>
+        
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+
+
+
+    </template>
+  </div>
+</body>
+<script>
+new Vue({
+    el: '#codeGenerate',
+    data:{
+        moduleName:'',
+        returnType:'',
+        returnComment:'',
+        range:'',
+        functionName:'',
+        enumName:'',
+        functionDescription:'',
+        dialogVisible:false,
+        form:{},
+        tableData: [],
+        multipleSelection: [],
+        drawer: false,
+        direction: 'rtl',
+        type:'',
+        options: [{
+          value: 'uint8_t',
+          label: 'uint8_t'
+        }, {
+          value: 'uint16_t',
+          label: 'uint16_t'
+        }, {
+          value: 'uint32_t',
+          label: 'uint32_t'
+        }, {
+          value: 'uint64_t',
+          label: 'uint64_t'
+        }, {
+          value: 'void',
+          label: 'void'
+        }],
+        value: '',
+
+        strFunction:''
+    },
+    methods: {
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
+        add(){
+            if(this.tableData==undefined){
+                this.tableData=new Array();
+            }
+            if(this.form.name!=null){
+                let data={}
+                data.name=this.form.name
+                if(this.form.typeName==null){
+                    data.typeName=''
+                }else{
+                    data.typeName=this.form.typeName
+                }
+
+                if(this.form.comment==null){
+                    data.comment=''
+                }else{
+                    data.comment=this.form.comment
+                }
+                this.tableData.push(data)
+            }else{
+                this.$message({
+                message: '变量名不能为空',
+                type: 'warning'
+                });
+            } 
+        },
+        generateCode(){
+            this.dialogVisible = true
+            this.creatFunctionName()
+        },
+        deleteRow(index, rows) {
+            rows.splice(index, 1);
+        },
+        creatFunctionName(){
+            this.strFunction =this.type+' '+this.moduleName+'_';
+            console.log(this.type);
+            switch (this.returnType) {
+                case 'uint8_t': this.strFunction=this.strFunction+'u8';break;
+                case 'uint16_t': this.strFunction=this.strFunction+'u16';break;
+                case 'uin32_t': this.strFunction=this.strFunction+'u32';break;
+                case 'uint64_t': this.strFunction=this.strFunction+'u64';break;
+                case 'void': this.strFunction=this.strFunction+'void';break;
+                default:break; 
+            }
+            this.strFunction=this.strFunction+this.functionName
+        }
+    },
+})
+</script>
+</html>
